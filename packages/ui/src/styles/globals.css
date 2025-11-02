@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom TDI ARMS styles */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .btn-outline {
+    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn-destructive {
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+  }
+
+  .tactical-btn {
+    @apply bg-tactical-black text-white hover:bg-dark-gray transition-colors duration-200 font-medium py-3 px-6 rounded-md shadow-lg;
+  }
+
+  .tactical-btn-orange {
+    @apply bg-safety-orange text-white hover:bg-orange-600 transition-colors duration-200 font-bold py-3 px-6 rounded-md shadow-lg uppercase tracking-wide;
+  }
+
+  .tactical-section {
+    @apply bg-tactical-black text-white;
+  }
+
+  .product-card {
+    @apply bg-card border border-border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+
+  .product-image-container {
+    @apply relative aspect-square overflow-hidden rounded-t-lg bg-gray-100;
+  }
+
+  .badge-in-stock {
+    @apply bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded;
+  }
+
+  .badge-low-stock {
+    @apply bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded;
+  }
+
+  .badge-out-of-stock {
+    @apply bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded;
+  }
+
+  .rating-star {
+    @apply text-yellow-400 fill-current;
+  }
+
+  .rating-star-empty {
+    @apply text-gray-300 fill-current;
+  }
+
+  .navbar-tactical {
+    @apply bg-tactical-black/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50;
+  }
+
+  .hero-tactical {
+    @apply bg-gradient-to-r from-tactical-black via-dark-gray to-tactical-black text-white;
+  }
+
+  .footer-tactical {
+    @apply bg-dark-gray text-gray-300 border-t border-gray-800;
+  }
+
+  .input-tactical {
+    @apply bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-safety-orange focus:ring-safety-orange;
+  }
+
+  .select-tactical {
+    @apply bg-gray-800 border-gray-700 text-white focus:border-safety-orange focus:ring-safety-orange;
+  }
+
+  .checkbox-tactical {
+    @apply bg-gray-800 border-gray-700 text-safety-orange focus:ring-safety-orange;
+  }
+}
+
+/* Performance optimizations */
+@layer utilities {
+  .lazy-load {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+
+  .lazy-loaded {
+    @apply opacity-100;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  .skeleton-dark {
+    @apply animate-pulse bg-gray-700 rounded;
+  }
+}
+
+/* Accessibility improvements */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .focus-visible:focus {
+    @apply outline-none ring-2 ring-safety-orange ring-offset-2 ring-offset-tactical-black;
+  }
+
+  .skip-link {
+    @apply absolute -top-full left-0 bg-safety-orange text-white px-4 py-2 rounded-md z-50 focus:top-4;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    @apply text-black bg-white;
+  }
+
+  .tactical-section {
+    @apply text-black bg-white;
+  }
+}
+
+/* Animation utilities */
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-in-out;
+  }
+
+  .animate-slide-in-top {
+    animation: slide-in-from-top 0.3s ease-out;
+  }
+
+  .animate-slide-in-bottom {
+    animation: slide-in-from-bottom 0.3s ease-out;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
