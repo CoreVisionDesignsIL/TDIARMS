@@ -137,3 +137,42 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# TDI ARMS Specific
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Prisma
+prisma/migrations/
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Sentry
+.sentryclirc
+
+# Cloudflare
+.dev.vars
+
+# AWS
+.aws/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Docker
+docker-compose.override.yml
+
+# Shopify
+.shopify/
+
+# Contentful
+.contentful/
