@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { AppConfiguration } from '@tdi-arms/types';
+import type { AppConfiguration, PricingTier } from '@tdi-arms/types';
 
 // Environment validation schemas
 const envSchema = z.object({
