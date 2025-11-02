@@ -1,0 +1,525 @@
+/*
+Theme Name: TDI Arms Child Theme
+Theme URI: https://tdiarms.com
+Description: Custom child theme for TDI Arms tactical weapon accessories website. Built on Hello Elementor with tactical design, performance optimization, and e-commerce functionality.
+Author: TDI Arms Development Team
+Author URI: https://tdiarms.com
+Template: hello-elementor
+Version: 1.0.0
+License: Proprietary
+License URI: https://tdiarms.com/license/
+Text Domain: tdi-arms
+Domain Path: /languages
+*/
+
+/* === TDI Arms Tactical Design System === */
+
+/* CSS Custom Properties (Variables) */
+:root {
+  /* Brand Colors */
+  --tdi-black: #1a1a1a;
+  --tdi-dark-gray: #2d2d2d;
+  --tdi-medium-gray: #666666;
+  --tdi-light-gray: #999999;
+  --tdi-border-gray: #e5e5e5;
+  --tdi-background: #f8f8f8;
+  --tdi-white: #ffffff;
+
+  /* Tactical Accent Colors */
+  --tdi-sand: #d4a574;
+  --tdi-od-green: #556b2f;
+  --tdi-accent-red: #cc3333;
+  --tdi-tactical-blue: #2c5aa0;
+
+  /* Typography Colors */
+  --tdi-text-primary: #333333;
+  --tdi-text-secondary: #666666;
+  --tdi-text-muted: #999999;
+  --tdi-text-light: #ffffff;
+
+  /* Status Colors */
+  --tdi-success: #28a745;
+  --tdi-warning: #ffc107;
+  --tdi-error: #dc3545;
+  --tdi-info: #17a2b8;
+
+  /* Typography */
+  --tdi-font-heading: 'Roboto Condensed', sans-serif;
+  --tdi-font-body: 'Roboto', sans-serif;
+  --tdi-font-technical: 'Courier New', monospace;
+  --tdi-font-navigation: 'Arial', sans-serif;
+
+  /* Font Sizes */
+  --tdi-text-xs: 0.75rem;    /* 12px */
+  --tdi-text-sm: 0.875rem;   /* 14px */
+  --tdi-text-base: 1rem;     /* 16px */
+  --tdi-text-lg: 1.125rem;   /* 18px */
+  --tdi-text-xl: 1.25rem;    /* 20px */
+  --tdi-text-2xl: 1.5rem;    /* 24px */
+  --tdi-text-3xl: 1.875rem;  /* 30px */
+  --tdi-text-4xl: 2.25rem;   /* 36px */
+  --tdi-text-5xl: 3rem;      /* 48px */
+  --tdi-text-6xl: 3.75rem;   /* 60px */
+
+  /* Spacing */
+  --tdi-space-1: 0.25rem;    /* 4px */
+  --tdi-space-2: 0.5rem;     /* 8px */
+  --tdi-space-3: 0.75rem;    /* 12px */
+  --tdi-space-4: 1rem;       /* 16px */
+  --tdi-space-5: 1.25rem;    /* 20px */
+  --tdi-space-6: 1.5rem;     /* 24px */
+  --tdi-space-8: 2rem;       /* 32px */
+  --tdi-space-10: 2.5rem;    /* 40px */
+  --tdi-space-12: 3rem;      /* 48px */
+  --tdi-space-16: 4rem;      /* 64px */
+  --tdi-space-20: 5rem;      /* 80px */
+  --tdi-space-24: 6rem;      /* 96px */
+
+  /* Borders & Shadows */
+  --tdi-border-sm: 1px solid var(--tdi-border-gray);
+  --tdi-border-md: 2px solid var(--tdi-border-gray);
+  --tdi-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --tdi-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --tdi-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --tdi-shadow-tactical: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Transitions */
+  --tdi-transition-fast: 0.15s ease-in-out;
+  --tdi-transition-normal: 0.3s ease-in-out;
+  --tdi-transition-slow: 0.5s ease-in-out;
+
+  /* Z-Index Layers */
+  --tdi-z-dropdown: 1000;
+  --tdi-z-sticky: 1020;
+  --tdi-z-fixed: 1030;
+  --tdi-z-modal-backdrop: 1040;
+  --tdi-z-modal: 1050;
+  --tdi-z-popover: 1060;
+  --tdi-z-tooltip: 1070;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--tdi-font-body);
+  font-size: var(--tdi-text-base);
+  line-height: 1.6;
+  color: var(--tdi-text-primary);
+  background-color: var(--tdi-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--tdi-font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--tdi-space-4);
+  color: var(--tdi-black);
+}
+
+h1 { font-size: var(--tdi-text-5xl); }
+h2 { font-size: var(--tdi-text-4xl); }
+h3 { font-size: var(--tdi-text-3xl); }
+h4 { font-size: var(--tdi-text-2xl); }
+h5 { font-size: var(--tdi-text-xl); }
+h6 { font-size: var(--tdi-text-lg); }
+
+p {
+  margin-bottom: var(--tdi-space-4);
+}
+
+a {
+  color: var(--tdi-tactical-blue);
+  text-decoration: none;
+  transition: color var(--tdi-transition-fast);
+}
+
+a:hover {
+  color: var(--tdi-black);
+}
+
+/* Tactical Buttons */
+.tdi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tdi-space-3) var(--tdi-space-6);
+  font-family: var(--tdi-font-heading);
+  font-weight: 600;
+  font-size: var(--tdi-text-base);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all var(--tdi-transition-fast);
+  text-decoration: none;
+  min-height: 44px; /* Touch target size */
+}
+
+.tdi-btn-primary {
+  background-color: var(--tdi-black);
+  color: var(--tdi-text-light);
+}
+
+.tdi-btn-primary:hover {
+  background-color: var(--tdi-od-green);
+  transform: translateY(-2px);
+  box-shadow: var(--tdi-shadow-md);
+}
+
+.tdi-btn-secondary {
+  background-color: transparent;
+  color: var(--tdi-black);
+  border: var(--tdi-border-md);
+}
+
+.tdi-btn-secondary:hover {
+  background-color: var(--tdi-black);
+  color: var(--tdi-text-light);
+}
+
+.tdi-btn-accent {
+  background-color: var(--tdi-sand);
+  color: var(--tdi-black);
+}
+
+.tdi-btn-accent:hover {
+  background-color: var(--tdi-od-green);
+  color: var(--tdi-text-light);
+}
+
+/* Tactical Card Components */
+.tdi-card {
+  background-color: var(--tdi-white);
+  border: var(--tdi-border-sm);
+  border-radius: 0.5rem;
+  padding: var(--tdi-space-6);
+  box-shadow: var(--tdi-shadow-sm);
+  transition: all var(--tdi-transition-normal);
+}
+
+.tdi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--tdi-shadow-lg);
+  border-color: var(--tdi-sand);
+}
+
+/* Tactical Header Navigation */
+.tdi-header {
+  background-color: var(--tdi-black);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--tdi-z-fixed);
+  box-shadow: var(--tdi-shadow-md);
+}
+
+.tdi-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--tdi-space-4) 0;
+}
+
+.tdi-nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--tdi-space-8);
+}
+
+.tdi-nav-link {
+  color: var(--tdi-text-light);
+  font-family: var(--tdi-font-heading);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color var(--tdi-transition-fast);
+}
+
+.tdi-nav-link:hover {
+  color: var(--tdi-sand);
+}
+
+/* Hero Section */
+.tdi-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(85, 107, 47, 0.8)),
+              url('../images/hero-background.jpg') center/cover;
+  color: var(--tdi-text-light);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.tdi-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+.tdi-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  padding: 0 var(--tdi-space-6);
+}
+
+.tdi-hero-title {
+  font-size: clamp(var(--tdi-text-4xl), 5vw, var(--tdi-text-6xl));
+  margin-bottom: var(--tdi-space-6);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  animation: fadeInUp 1s ease-out;
+}
+
+.tdi-hero-subtitle {
+  font-size: clamp(var(--tdi-text-lg), 2.5vw, var(--tdi-text-2xl));
+  margin-bottom: var(--tdi-space-8);
+  font-weight: 300;
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.tdi-hero-actions {
+  display: flex;
+  gap: var(--tdi-space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+/* Product Grid */
+.tdi-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--tdi-space-6);
+  padding: var(--tdi-space-8) 0;
+}
+
+.tdi-product-card {
+  background: var(--tdi-white);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: var(--tdi-shadow-sm);
+  transition: all var(--tdi-transition-normal);
+  position: relative;
+}
+
+.tdi-product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--tdi-shadow-tactical);
+}
+
+.tdi-product-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform var(--tdi-transition-slow);
+}
+
+.tdi-product-card:hover .tdi-product-image {
+  transform: scale(1.05);
+}
+
+.tdi-product-content {
+  padding: var(--tdi-space-4);
+}
+
+.tdi-product-title {
+  font-family: var(--tdi-font-heading);
+  font-size: var(--tdi-text-lg);
+  font-weight: 600;
+  margin-bottom: var(--tdi-space-2);
+  color: var(--tdi-black);
+}
+
+.tdi-product-price {
+  font-size: var(--tdi-text-xl);
+  font-weight: 700;
+  color: var(--tdi-tactical-blue);
+  margin-bottom: var(--tdi-space-4);
+}
+
+.tdi-product-badge {
+  position: absolute;
+  top: var(--tdi-space-2);
+  right: var(--tdi-space-2);
+  background-color: var(--tdi-accent-red);
+  color: var(--tdi-text-light);
+  padding: var(--tdi-space-1) var(--tdi-space-2);
+  border-radius: 0.25rem;
+  font-size: var(--tdi-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tdi-nav {
+    flex-direction: column;
+    gap: var(--tdi-space-4);
+  }
+
+  .tdi-nav-menu {
+    flex-direction: column;
+    gap: var(--tdi-space-4);
+    text-align: center;
+  }
+
+  .tdi-hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tdi-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .tdi-product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--tdi-space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .tdi-hero-content {
+    padding: 0 var(--tdi-space-4);
+  }
+
+  .tdi-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tdi-card {
+    padding: var(--tdi-space-4);
+  }
+}
+
+/* WooCommerce Compatibility */
+.woocommerce .tdi-btn,
+.woocommerce-page .tdi-btn {
+  font-size: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.woocommerce .product,
+.woocommerce-page .product {
+  margin-bottom: var(--tdi-space-8);
+}
+
+.woocommerce .woocommerce-message,
+.woocommerce-page .woocommerce-message {
+  background-color: var(--tdi-success);
+  color: var(--tdi-text-light);
+  border-left: 4px solid var(--tdi-success);
+}
+
+.woocommerce .woocommerce-error,
+.woocommerce-page .woocommerce-error {
+  background-color: var(--tdi-error);
+  color: var(--tdi-text-light);
+  border-left: 4px solid var(--tdi-error);
+}
+
+/* Elementor Compatibility */
+.elementor-widget-heading .elementor-heading-title {
+  font-family: var(--tdi-font-heading);
+}
+
+.elementor-widget-button .elementor-button {
+  font-family: var(--tdi-font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus States */
+.tdi-btn:focus,
+.tdi-nav-link:focus,
+a:focus {
+  outline: 2px solid var(--tdi-sand);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .tdi-header,
+  .tdi-hero,
+  .tdi-footer {
+    display: none;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  .tdi-card {
+    border: 1pt solid #000;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
