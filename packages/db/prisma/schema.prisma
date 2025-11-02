@@ -1,0 +1,628 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users table for authentication and user management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String?
+  role      UserRole @default(CUSTOMER)
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  customer Customer?
+  dealer   Dealer?
+
+  @@map("users")
+}
+
+// Customer specific information
+model Customer {
+  id          String @id @default(cuid())
+  userId      String @unique
+  dateOfBirth DateTime?
+  preferences Json? // Store customer preferences as JSON
+
+  // Relations
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addresses   Address[]
+  orders      Order[]
+  reviews     Review[]
+  wishlists   WishlistItem[]
+
+  @@map("customers")
+}
+
+// Dealer information for B2B portal
+model Dealer {
+  id                    String       @id @default(cuid())
+  userId                String       @unique
+  companyName           String
+  dbaName               String?
+  businessType          BusinessType
+  fflNumber             String
+  fflExpiration         DateTime
+  website               String?
+  yearsInBusiness       Int
+  estimatedAnnualVolume Float?
+  pricingTier           PricingTier  @default(BRONZE)
+  creditLimit           Float?
+  status                DealerStatus @default(PENDING)
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addresses  Address[]
+  orders     Order[]
+  documents  DealerDocument[]
+
+  @@map("dealers")
+}
+
+// Dealer documents (FFL, business license, etc.)
+model DealerDocument {
+  id          String       @id @default(cuid())
+  dealerId    String
+  type        DocumentType
+  filename    String
+  url         String
+  fileSize    Int
+  mimeType    String
+  status      DocumentStatus @default(PENDING)
+  uploadedAt  DateTime     @default(now())
+  expiresAt   DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  dealer Dealer @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+
+  @@map("dealer_documents")
+}
+
+// Address information for customers and dealers
+model Address {
+  id          String      @id @default(cuid())
+  userId      String
+  type        AddressType
+  street1     String
+  street2     String?
+  city        String
+  state       String
+  postalCode  String
+  country     String
+  isDefault   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer        Customer? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealer          Dealer?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  billingOrders   Order[]   @relation("BillingAddress")
+  shippingOrders  Order[]   @relation("ShippingAddress")
+
+  @@map("addresses")
+}
+
+// Product catalog
+model Product {
+  id                String              @id @default(cuid())
+  sku               String              @unique
+  name              String
+  description       String
+  shortDescription  String
+  price             Float
+  compareAtPrice    Float?
+  cost              Float?
+  weight            Float               // in ounces
+  length            Float               // in inches
+  width             Float               // in inches
+  height            Float               // in inches
+  material          ProductMaterial
+  color             ProductColor
+  platform          FirearmPlatform
+  category          ProductCategory
+  availability      ProductAvailability @default(IN_STOCK)
+  tags              String[]            // Array of strings
+  seoTitle          String?
+  seoDescription    String?
+  seoSlug           String              @unique
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  images      ProductImage[]
+  videos      ProductVideo[]
+  variants    ProductVariant[]
+  features    ProductFeature[]
+  specs       ProductSpecification[]
+  compatibilities ProductCompatibility[]
+  lineItems   OrderItem[]
+  reviews     Review[]
+  crossSells  ProductCrossSell[] @relation("ProductA")
+  upSells     ProductCrossSell[] @relation("ProductB")
+  wishlists   WishlistItem[]
+
+  @@map("products")
+}
+
+// Product variants (different colors, sizes, etc.)
+model ProductVariant {
+  id          String @id @default(cuid())
+  productId   String
+  sku         String @unique
+  name        String
+  price       Float?
+  weight      Float?
+  color       String?
+  size        String?
+  material    String?
+  image       String?
+  availability ProductAvailability @default(IN_STOCK)
+  position    Int    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  product    Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  lineItems  OrderItem[]
+
+  @@map("product_variants")
+}
+
+// Product images
+model ProductImage {
+  id         String   @id @default(cuid())
+  productId  String
+  url        String
+  alt        String
+  width      Int
+  height     Int
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+// Product videos
+model ProductVideo {
+  id         String   @id @default(cuid())
+  productId  String
+  url        String
+  thumbnail  String
+  title      String
+  duration   Int?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_videos")
+}
+
+// Product features
+model ProductFeature {
+  id        String   @id @default(cuid())
+  productId String
+  title     String
+  description String
+  icon      String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_features")
+}
+
+// Product specifications
+model ProductSpecification {
+  id        String   @id @default(cuid())
+  productId String
+  name      String
+  value     String
+  unit      String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_specifications")
+}
+
+// Product compatibility (which firearms this product fits)
+model ProductCompatibility {
+  id        String   @id @default(cuid())
+  productId String
+  platform  String
+  model     String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_compatibilities")
+}
+
+// Product cross-sells and upsells
+model ProductCrossSell {
+  id         String       @id @default(cuid())
+  productAId String
+  productBId String
+  type       CrossSellType
+  position   Int          @default(0)
+  createdAt  DateTime     @default(now())
+
+  // Relations
+  productA Product @relation("ProductA", fields: [productAId], references: [id], onDelete: Cascade)
+  productB Product @relation("ProductB", fields: [productBId], references: [id], onDelete: Cascade)
+
+  @@unique([productAId, productBId])
+  @@map("product_cross_sells")
+}
+
+// Orders
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  customerId      String?
+  dealerId        String?
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  fulfillmentStatus FulfillmentStatus @default(PENDING)
+  subtotal        Float
+  tax             Float
+  shipping        Float
+  discount        Float         @default(0)
+  total           Float
+  currency        String        @default("USD")
+  notes           String?
+  billingAddressId String?
+  shippingAddressId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+
+  // Relations
+  customer         Customer?     @relation(fields: [customerId], references: [id])
+  dealer           Dealer?       @relation(fields: [dealerId], references: [id])
+  billingAddress   Address?      @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  shippingAddress  Address?      @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  items            OrderItem[]
+  trackingNumbers  OrderTracking[]
+  payments         Payment[]
+
+  @@map("orders")
+}
+
+// Order line items
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String
+  variantId   String?
+  sku         String
+  name        String
+  quantity    Int
+  unitPrice   Float
+  totalPrice  Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  order   Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product         @relation(fields: [productId], references: [id])
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@map("order_items")
+}
+
+// Order tracking numbers
+model OrderTracking {
+  id           String   @id @default(cuid())
+  orderId      String
+  carrier      String
+  trackingNumber String
+  status       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_tracking")
+}
+
+// Payments
+model Payment {
+  id               String        @id @default(cuid())
+  orderId          String
+  method           PaymentMethod
+  status           PaymentStatus @default(PENDING)
+  amount           Float
+  currency         String        @default("USD")
+  transactionId    String?
+  gatewayResponse  Json?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// Shopping cart
+model Cart {
+  id        String   @id @default(cuid())
+  customerId String?
+  dealerId  String?
+  sessionId String?  // For guest carts
+  expiresAt DateTime @default(dbgenerated("(now() + interval '7 days')"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  items CartItem[]
+
+  @@map("carts")
+}
+
+// Cart items
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  productId String
+  variantId String?
+  quantity  Int
+  addedAt   DateTime @default(now())
+
+  // Relations
+  cart    Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product         @relation(fields: [productId], references: [id])
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@map("cart_items")
+}
+
+// Product reviews
+model Review {
+  id         String       @id @default(cuid())
+  productId  String
+  customerId String?
+  rating     Int          // 1-5 stars
+  title      String
+  content    String
+  images     String[]     // Array of image URLs
+  verified   Boolean      @default(false)
+  helpful    Int          @default(0)
+  status     ReviewStatus @default(PENDING)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  // Relations
+  product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@map("reviews")
+}
+
+// Wishlist items
+model WishlistItem {
+  id        String   @id @default(cuid())
+  customerId String
+  productId String
+  addedAt   DateTime @default(now())
+
+  // Relations
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, productId])
+  @@map("wishlist_items")
+}
+
+// Blog posts
+model BlogPost {
+  id           String       @id @default(cuid())
+  title        String
+  slug         String       @unique
+  excerpt      String
+  content      String       // HTML content
+  featuredImage String?
+  category     BlogCategory
+  tags         String[]
+  author       String
+  published    Boolean      @default(false)
+  publishedAt  DateTime?
+  seoTitle     String?
+  seoDescription String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("blog_posts")
+}
+
+// Enums
+enum UserRole {
+  CUSTOMER
+  DEALER
+  ADMIN
+  SUPER_ADMIN
+  LE_MIL
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum BusinessType {
+  RETAIL_STORE
+  ONLINE_RETAILER
+  DISTRIBUTOR
+  LAW_ENFORCEMENT
+}
+
+enum PricingTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  STRATEGIC_PARTNER
+}
+
+enum DealerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RESTRICTED
+  SUSPENDED
+}
+
+enum DocumentType {
+  FFL_LICENSE
+  BUSINESS_LICENSE
+  SALES_TAX_CERTIFICATE
+  CERTIFICATE_OF_INSURANCE
+  RESALE_CERTIFICATE
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum AddressType {
+  BILLING
+  SHIPPING
+  BOTH
+}
+
+enum ProductMaterial {
+  POLYMER
+  ALUMINUM
+  STEEL
+  COMPOSITE
+  TITANIUM
+}
+
+enum ProductColor {
+  BLACK
+  DESERT_TAN
+  OD_GREEN
+  GRAY
+  MULTICAM
+  COYOTE
+}
+
+enum FirearmPlatform {
+  AR_15
+  AK_47
+  TAVOR
+  PISTOL
+  UNIVERSAL
+}
+
+enum ProductCategory {
+  HANDGUARDS
+  STOCKS
+  GRIPS
+  OPTIC_MOUNTS
+  ACCESSORIES
+}
+
+enum ProductAvailability {
+  IN_STOCK
+  LOW_STOCK
+  BACKORDER
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+enum CrossSellType {
+  CROSS_SELL
+  UP_SELL
+  RELATED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIALLY_PAID
+  REFUNDED
+  PARTIALLY_REFUNDED
+  FAILED
+}
+
+enum FulfillmentStatus {
+  PENDING
+  PARTIALLY_FULFILLED
+  FULFILLED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  PAYPAL
+  PURCHASE_ORDER
+  WIRE_TRANSFER
+  CHECK
+  CRYPTOCURRENCY
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BlogCategory {
+  COMPANY_NEWS
+  PRODUCT_SPOTLIGHTS
+  TACTICAL_GUIDES
+  INSTALLATION_HOW_TOS
+}
