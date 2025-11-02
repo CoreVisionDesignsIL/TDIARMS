@@ -1,0 +1,68 @@
+{
+    "name": "tdi-arms/wordpress-website",
+    "description": "TDI Arms - Ultimate Weapon Accessories E-commerce Website",
+    "type": "project",
+    "keywords": ["wordpress", "woocommerce", "tactical", "weapons", "e-commerce", "tdi-arms"],
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "TDI Arms Development Team",
+            "email": "dev@tdiarms.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "composer/installers": "^2.2"
+    },
+    "require-dev": {
+        "wp-cli/wp-cli-bundle": "^2.8",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "wp-coding-standards/wpcs": "^3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+            "wp-content/themes/{$name}/": ["type:wordpress-theme"]
+        },
+        "wordpress-install-dir": "wp"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@setup-wordpress"
+        ],
+        "setup-wordpress": [
+            "wp core download --path=wp --force",
+            "wp config create --dbname=tdi_arms_wp --dbuser=tdi_arms_user --dbpass=secure_password_here --dbhost=localhost --config-file=wp-config.php --force"
+        ],
+        "install-plugins": [
+            "wp plugin install woocommerce yoast-premium elementor-pro wp-rocket wp-smush-pro wordfence gravity-forms zoho-crm-b2b-king mailerlite --activate"
+        ],
+        "setup-theme": [
+            "wp theme install hello-elementor --activate",
+            "wp theme activate tdi-arms-child"
+        ],
+        "build-production": [
+            "@composer install --no-dev --optimize-autoloader",
+            "wp package install anhskohbo/no-cli",
+            "wp cache flush"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "wp-coding-standards/wpcs": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
